@@ -78,110 +78,113 @@ function exchanger_form() {
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" class="exchange-form">
         <div class="step-one formcol vc_col-sm-3">
             <div class="h2"><span class="step-num">1</span><?=_('Отдаете')?></div>
-            <div>
-                <label for="forvalute"><?php echo _('Валюта'); ?>:</label>
-                <select id="forvalute" name="forvalute">
-                    <option disabled="disabled" value="" <?php echo ( isset( $_POST['forvalute'] ) ? null : ' selected="selected"'); ?>><?php echo _('Select for valute'); ?></option>
-                    <?php
-                    foreach ($valutes as $value => $code){
-                        ?>
-                        <option <?php echo(isset($_POST['forvalute']) && $_POST['forvalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div>
-                <label for="sumfor"><?php echo _('Сумма'); ?>:</label>
-                <input type="text" id="sumfor" name="sumfor" min="0" value="<?php echo ( isset( $_POST['sumfor'] ) ? $_POST['sumfor'] : null ); ?>">
-            </div>
+			<div class="col-data">
+				<div>
+					<label for="forvalute"><?php echo _('Валюта'); ?>:</label>
+					<select id="forvalute" name="forvalute">
+						<option disabled="disabled" value="" <?php echo ( isset( $_POST['forvalute'] ) ? null : ' selected="selected"'); ?>><?php echo _('Выберите валюту'); ?></option>
+						<?php
+						foreach ($valutes as $value => $code){
+							?>
+							<option <?php echo(isset($_POST['forvalute']) && $_POST['forvalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
+						<?php } ?>
+					</select>
+				</div>
+				<div>
+					<label for="sumfor"><?php echo _('Сумма'); ?>:</label>
+					<input type="text" id="sumfor" name="sumfor" min="0" value="<?php echo ( isset( $_POST['sumfor'] ) ? $_POST['sumfor'] : null ); ?>">
+				</div>
 
-            <div class="card">
-                <label for="cardfor"><?php echo _('№ карты');?>:</label>
-                <input type="text" name="cardfor" value="<?php echo(isset($_POST['cardfor']) ? $_POST['cardfor'] : null); ?>">
-            </div>
+				<div class="card">
+					<label for="cardfor"><?php echo _('№ карты');?>:</label>
+					<input type="text" name="cardfor" value="<?php echo(isset($_POST['cardfor']) ? $_POST['cardfor'] : null); ?>">
+				</div>
 
-            <div class="purse">
-                <label for="pursefor"><?php echo _('Счет');?>:</label>
-                <input type="text" name="pursefor" value="<?php echo(isset($_POST['pursefor']) ? $_POST['pursefor'] : null); ?>">
-            </div>
+				<div class="purse">
+					<label for="pursefor"><?php echo _('Счет');?>:</label>
+					<input type="text" name="pursefor" value="<?php echo(isset($_POST['pursefor']) ? $_POST['pursefor'] : null); ?>">
+				</div>
 
-            <div class="city">
-                <label for="cityfor"><?php echo _('Город');?>:</label>
-                <input type="text" name="cityfor" value="<?php echo(isset($_POST['cityfor']) ? $_POST['cityfor'] : null); ?>">
-            </div>
-
+				<div class="city">
+					<label for="cityfor"><?php echo _('Город');?>:</label>
+					<input type="text" name="cityfor" value="<?php echo(isset($_POST['cityfor']) ? $_POST['cityfor'] : null); ?>">
+				</div>
+				<div class="transfer-ico"><i class="fa fa-arrows-h" aria-hidden="true"></i></div>
+			</div>
         </div>
 
         <div class="step-two formcol vc_col-sm-3">
             <div class="h2"><span class="step-num">2</span><?=_('Получаете')?></div>
-            <div class="cource"></div>
-            <div class="form-item">
-                <label for="tovalute"><?php echo _('Валюта'); ?></label>
-                <select id="tovalute" name="tovalute">
-                    <option disabled="disabled" value="" <?php echo ( isset( $_POST['tovalute'] ) ? null : ' selected="selected"'); ?>><?php echo _('Select to valute'); ?></option>
-                    <?php
-                    foreach ($valutes as $value => $code){
-                        ?>
-                        <option <?php echo(isset($_POST['tovalute']) && $_POST['tovalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div class="form-item">
-                <div class="reserv"></div>
-                <label for="sumto"><?php echo _('Сумма'); ?>:</label>
-                <input type="text" readonly="readonly" id="sumto" max="0" name="sumto" value="<?php echo ( isset( $_POST['sumto'] ) ? $_POST['sumto'] : null ); ?>">
-            </div>
+			<div class="col-data">
+				<div class="form-item st2-val">
+					<div class="cource"></div>
+					<label for="tovalute"><?php echo _('Валюта'); ?></label>
+					<select id="tovalute" name="tovalute">
+						<option disabled="disabled" value="" <?php echo ( isset( $_POST['tovalute'] ) ? null : ' selected="selected"'); ?>><?php echo _('Выберите валюту'); ?></option>
+						<?php
+						foreach ($valutes as $value => $code){
+							?>
+							<option <?php echo(isset($_POST['tovalute']) && $_POST['tovalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
+						<?php } ?>
+					</select>
+				</div>
+				<div class="form-item st2-summ">
+					<div class="reserv"></div>
+					<label for="sumto"><?php echo _('Сумма'); ?>:</label>
+					<input type="text" readonly="readonly" id="sumto" max="0" name="sumto" value="<?php echo ( isset( $_POST['sumto'] ) ? $_POST['sumto'] : null ); ?>">
+				</div>
 
-            <div class="form-item card">
-                <label for="cardto"><?php echo _('№ карты');?>:</label>
-                <input type="text" name="cardto" value="<?php echo(isset($_POST['cardto']) ? $_POST['cardto'] : null); ?>">
-            </div>
+				<div class="form-item card">
+					<label for="cardto"><?php echo _('№ карты');?>:</label>
+					<input type="text" name="cardto" value="<?php echo(isset($_POST['cardto']) ? $_POST['cardto'] : null); ?>">
+				</div>
 
-            <div class="form-item purse">
-                <label for="purseto"><?php echo _('Счет');?>:</label>
-                <input type="text" name="purseto" value="<?php echo(isset($_POST['purseto']) ? $_POST['purseto'] : null); ?>">
-            </div>
+				<div class="form-item purse">
+					<label for="purseto"><?php echo _('Счет');?>:</label>
+					<input type="text" name="purseto" value="<?php echo(isset($_POST['purseto']) ? $_POST['purseto'] : null); ?>">
+				</div>
 
-            <div class="form-item city">
-                <label for="cityto"><?php echo _('Город');?>:</label>
-                <input type="text" name="cityto" value="<?php echo(isset($_POST['cityto']) ? $_POST['cityto'] : null); ?>">
-            </div>
-
+				<div class="form-item city">
+					<label for="cityto"><?php echo _('Город');?>:</label>
+					<input type="text" name="cityto" value="<?php echo(isset($_POST['cityto']) ? $_POST['cityto'] : null); ?>">
+				</div>
+			</div>
         </div>
 
         <div class="step-three user-info formcol vc_col-sm-3">
             <div class="h2"><span class="step-num">3</span><?=_('Личные данные')?>:</div>
-            <div class="form-item form-item">
-                <label for="firstname"><?php echo _('Имя');?>:</label>
-                <input type="text" name="firstname" value="<?php echo(isset($_POST['firstname']) ? $_POST['firstname'] : null); ?>">
-            </div>
+			<div class="col-data">
+				<div class="form-item form-item">
+					<label for="firstname"><?php echo _('Имя');?>:</label>
+					<input type="text" name="firstname" value="<?php echo(isset($_POST['firstname']) ? $_POST['firstname'] : null); ?>">
+				</div>
 
-            <div class="form-item crypto-hide nal-hide">
-                <label for="lastname"><?php echo _('Фамилия');?>:</label>
-                <input type="text" name="lastname" value="<?php echo(isset($_POST['lastname']) ? $_POST['lastname'] : null); ?>">
-            </div>
+				<div class="form-item crypto-hide nal-hide">
+					<label for="lastname"><?php echo _('Фамилия');?>:</label>
+					<input type="text" name="lastname" value="<?php echo(isset($_POST['lastname']) ? $_POST['lastname'] : null); ?>">
+				</div>
 
-            <div class="form-item">
-                <label for="email">E-mail:</label>
-                <input type="text" name="email" value="<?php echo(isset($_POST['email']) ? $_POST['email'] : null); ?>">
-            </div>
+				<div class="form-item">
+					<label for="email">E-mail:</label>
+					<input type="text" name="email" value="<?php echo(isset($_POST['email']) ? $_POST['email'] : null); ?>">
+				</div>
 
-            <div class="form-item crypto-hide">
-                <label for="phone"><?php echo _('Телефон'); ?>:</label>
-                <input type="text" name="phone" value="<?php echo(isset($_POST['phone']) ? $_POST['phone'] : null); ?>">
-            </div>
-
+				<div class="form-item crypto-hide">
+					<label for="phone"><?php echo _('Телефон'); ?>:</label>
+					<input type="text" name="phone" value="<?php echo(isset($_POST['phone']) ? $_POST['phone'] : null); ?>">
+				</div>
+			</div>
         </div>
         <div class="step-four actions formcol vc_col-sm-3">
             <button type="submit" name="submit">
-                <span class="step-num">4</span>
-                <span class="icon-submit"></span>
+			    <div class="submit-before-wrap">
+					<span class="step-num">4</span>
+					<span class="icon-submit"></span>
+				</div>
                 <span class="capture-submit"><?=_('Совершить обмен')?></span>
             </button>
             <div class="description-submit">
-                <p>"Нажимая кнопку "Совершить обмен"</p>
-                <p>вы подтверждаете свое согласие</p>
-                <p>с <a href="#">Правилами предосьавления услуг</a></p>
-                <p>сервиса CryptoMarket"</p>
+                <p>"Нажимая кнопку "Совершить обмен" </br>вы подтверждаете свое согласие </br>с <a href="#">Правилами предоставления услуг</a> </br>сервиса CryptoMarket"</p>
             </div>
         </div>
     </form>

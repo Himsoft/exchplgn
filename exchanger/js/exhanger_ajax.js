@@ -66,7 +66,7 @@ jQuery(function($){
                     $('#sumto').removeAttr('readonly');
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
-                    $('.cource').text('Курс обмена: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
                 }
             });
         }
@@ -90,10 +90,10 @@ jQuery(function($){
                     }
 
                     var tovalutereserv = $('#tovalute').val().split('_');
-                    $('.reserv').text('Reserv:' + resp.reserv + ' ' + tovalutereserv[0]);
+                    $('.reserv').text('Резерв: ' + resp.reserv + ' ' + tovalutereserv[0]);
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
-                    $('.cource').text('Курс обмена: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
 
                     /*$('#sumto').val(resp.request_vars);
                     $('#sumto').attr('data-cource',resp.cource);
@@ -191,7 +191,7 @@ jQuery(function($){
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
 
-                    $('.cource').text('Курс обмена: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
                 }
             });
         }
