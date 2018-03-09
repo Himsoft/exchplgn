@@ -62,11 +62,13 @@ jQuery(function($){
                     var resp = JSON.parse(response);
                     //console.log('AJAX response : ', response);
                     $('#sumto').val(resp.request_vars);
-                    $('#sumto').attr('data-cource',resp.cource);
+                    $('#sumto').attr('data-cource',(resp.cource).toFixed(2));
                     $('#sumto').removeAttr('readonly');
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
-                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    var cource = (resp.cource < 1) ? (1 / resp.cource).toFixed(2) + ' ' + forvalute[0] + ' = 1 ' + tovalute[0] : '1 ' + forvalute[0] + ' = ' + (resp.cource).toFixed(2) + ' ' + tovalute[0];
+                    $('.cource').text(cource);
+                    //$('.cource').text('1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
                 }
             });
         }
@@ -93,7 +95,8 @@ jQuery(function($){
                     $('.reserv').text('Резерв: ' + resp.reserv + ' ' + tovalutereserv[0]);
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
-                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    var cource = (resp.cource < 1) ? (1 / resp.cource).toFixed(2) + ' ' + forvalute[0] + ' = 1 ' + tovalute[0] : '1 ' + forvalute[0] + ' = ' + (resp.cource).toFixed(2) + ' ' + tovalute[0];
+                    $('.cource').text(cource);
 
                     /*$('#sumto').val(resp.request_vars);
                     $('#sumto').attr('data-cource',resp.cource);
@@ -185,13 +188,14 @@ jQuery(function($){
                         $('#sumto').val(resp.request_vars);
                     }
 
-                    $('#sumto').attr('data-cource',resp.cource);
+                    $('#sumto').attr('data-cource',(resp.cource).toFixed(2));
                     $('#sumto').removeAttr('readonly');
 
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
-
-                    $('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
+                    var cource = (resp.cource < 1) ? (1 / resp.cource).toFixed(2) + ' ' + forvalute[0] + ' = 1 ' + tovalute[0] : '1 ' + forvalute[0] + ' = ' + (resp.cource).toFixed(2) + ' ' + tovalute[0];
+                    $('.cource').text(cource);
+                    //$('.cource').text('Курс: ' + '1 ' + forvalute[0] + ' = ' + resp.cource + ' ' + tovalute[0]);
                 }
             });
         }
@@ -234,4 +238,14 @@ jQuery(function($){
         change_valute_process($('#forvalute'));
         change_valute_process($('#tovalute'));
     });
+    $('body').on('click','.transfer-ico',function () {
+        var forval = $('#forvalute').val();
+        var toval = $('#tovalute').val();
+        $('#forvalute option,#tovalute option').removeAttr('selected');
+        $('#forvalute option,#tovalute option').removeAttr('disabled');
+        $('#forvalute option[value="'+toval+'"]').attr('selected', 'selected');
+        $('#tovalute option[value="'+forval+'"]').attr('selected', 'selected');
+        $('#forvalute, #tovalute').change();
+    });
+
 });

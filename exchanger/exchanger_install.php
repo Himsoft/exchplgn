@@ -111,6 +111,35 @@ function exchanger_install () {
         $order_page_id = wp_insert_post($order_page);
     }
 
+    $table_name = $wpdb->prefix . "exchanger_cources";
 
+    $sql = "CREATE TABLE " . $table_name . " (
+          id mediumint(9) NOT NULL AUTO_INCREMENT,
+          time bigint(11) DEFAULT '0' NOT NULL,
+          name VARCHAR(100) NOT NULL,
+          code VARCHAR(10) NOT NULL,
+          exchange_name VARCHAR(100) NOT NULL,
+          exchange_code VARCHAR(10) NOT NULL,
+          cource VARCHAR(100) DEFAULT '0' NOT NULL,
+          koefficient float DEFAULT '0' NOT NULL,
+          minsum float DEFAULT '0' NOT NULL,
+          UNIQUE KEY id (id)
+        );";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+
+    $table_options_name = $wpdb->prefix . "exchanger_valutes";
+
+    $sql = "CREATE TABLE " . $table_options_name . " (
+          id mediumint(9) NOT NULL AUTO_INCREMENT,
+          time bigint(11) DEFAULT '0' NOT NULL,
+          name VARCHAR(100) NOT NULL,
+          code VARCHAR(10) NOT NULL,
+          valute_icon text DEFAULT '' NOT NULL,
+          UNIQUE KEY id (id)
+        );";
+
+    dbDelta($sql);
 }
 ?>

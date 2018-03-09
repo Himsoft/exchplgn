@@ -68,7 +68,7 @@ function do_every_one_min() {
                 'code' => $item->symbol,
                 'exchange_name' => $valutes_code,
                 'exchange_code' => $valutes_code,
-                'cource' => $item->$key,
+                'cource' => 1 * $item->$key,
             );
 
             $data_i = array(
@@ -77,8 +77,21 @@ function do_every_one_min() {
                 'code' => $valutes_code,
                 'exchange_name' => $item->id,
                 'exchange_code' => $item->symbol,
-                'cource' => 1 / $item->$key,
+                'cource' => round(1 / $item->$key, 15),
             );
+
+            $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE code = '$item->symbol' AND exchange_code = '$valutes_code'");
+            if (!empty($symbol)) {
+                $wpdb->update($table_name, $data, array("ID" => $symbol));
+            } else {
+                $wpdb->insert($table_name, $data);
+            }
+            $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE exchange_code = '$item->symbol' AND code = '$valutes_code'");
+            if (!empty($symbol)) {
+                $wpdb->update($table_name, $data_i, array("ID" => $symbol));
+            } else {
+                $wpdb->insert($table_name, $data_i);
+            }
 
             if($valutes_code != 'USD') {
 
@@ -90,7 +103,7 @@ function do_every_one_min() {
                     'code' => 'USD',
                     'exchange_name' => $valutes_code,
                     'exchange_code' => $valutes_code,
-                    'cource' => $item->$key_val / $item->price_usd,
+                    'cource' => round($item->$key_val / $item->price_usd, 15),
                 );
 
                 $data_val_i = array(
@@ -99,7 +112,7 @@ function do_every_one_min() {
                     'code' => $valutes_code,
                     'exchange_name' => 'USD',
                     'exchange_code' => 'USD',
-                    'cource' => $item->price_usd / $item->$key_val,
+                    'cource' => round($item->price_usd / $item->$key_val, 15),
                 );
 
                 $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE code = 'USD' AND exchange_code = '$valutes_code'");
@@ -116,19 +129,6 @@ function do_every_one_min() {
                 }
             }
 
-            $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE code = '$item->symbol' AND exchange_code = '$valutes_code'");
-            if (!empty($symbol)) {
-                $wpdb->update($table_name, $data, array("ID" => $symbol));
-            } else {
-                $wpdb->insert($table_name, $data);
-            }
-            $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE exchange_code = '$item->symbol' AND code = '$valutes_code'");
-            if (!empty($symbol)) {
-                $wpdb->update($table_name, $data_i, array("ID" => $symbol));
-            } else {
-                $wpdb->insert($table_name, $data_i);
-            }
-
             foreach ($valutes_codes_ps as $id => $valutes_code_ps){
 
                 if(strpos($valutes_code_ps, $valutes_code.'_') !== false) {
@@ -139,7 +139,7 @@ function do_every_one_min() {
                         'code' => $item->symbol,
                         'exchange_name' => $id,
                         'exchange_code' => $valutes_code_ps,
-                        'cource' => $item->$key,
+                        'cource' => 1 * $item->$key,
                     );
 
                     $data_i = array(
@@ -148,7 +148,7 @@ function do_every_one_min() {
                         'code' => $valutes_code_ps,
                         'exchange_name' => $item->id,
                         'exchange_code' => $item->symbol,
-                        'cource' => 1 / $item->$key,
+                        'cource' => round(1 / $item->$key, 15),
                     );
                     $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE code = '$item->symbol' AND exchange_code = '$valutes_code_ps'");
                     if (!empty($symbol)) {
@@ -175,7 +175,7 @@ function do_every_one_min() {
                         'code' => $valutes_code_ps,
                         'exchange_name' => $valutes_code_tmp,
                         'exchange_code' => $valutes_code_tmp,
-                        'cource' => $item->$key_val / $item->$key_val_ps,
+                        'cource' => round($item->$key_val / $item->$key_val_ps, 15),
                     );
 
                     $data_val_i = array(
@@ -184,7 +184,7 @@ function do_every_one_min() {
                         'code' => $valutes_code_tmp,
                         'exchange_name' => $id,
                         'exchange_code' => $valutes_code_ps,
-                        'cource' => $item->$key_val_ps / $item->$key_val,
+                        'cource' => round($item->$key_val_ps / $item->$key_val, 15),
                     );
 
                     $symbol = $wpdb->get_var("SELECT id FROM $table_name WHERE code = '$valutes_code_ps' AND exchange_code = '$valutes_code_tmp'");

@@ -5,6 +5,12 @@ function exchanger_options_form($valname, $symbol) {
     $linkapi = 'https://api.coinmarketcap.com/v1/ticker/';
 
     $table_name = $wpdb->prefix . "exchanger_valutes";
+    if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['post']) && $_GET['post'] > 0) {
+        $wpdb->delete($table_name, array('ID' => $_GET['post']));
+        ?>
+        <script>window.location = '<?=admin_url('options-general.php?page=exchanger_options')?>'</script>
+        <?php
+    }
     $newtable = $wpdb->get_results( "SELECT * FROM $table_name" );
     ?>
     <style>
@@ -25,25 +31,48 @@ function exchanger_options_form($valname, $symbol) {
             padding: 5px 20px;
         }
     </style>
-    <table>
-        <tbody>
-            <tr>
-                <th><?='ID'?></th>
-                <th><?=_('Symbol')?></th>
-            </tr>
-        </tbody>
-    <?php
-    foreach ($newtable as $item) {
-        ?>
-        <tr>
-            <td><?=$item->name?></td>
-            <td><?=$item->code?></td>
-        </tr>
-        <?php
-    }
-    ?>
-    </table>
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+        <table>
+            <tbody>
+            <tr>
+                <th><?= 'ID' ?></th>
+                <th><?= _('Symbol') ?></th>
+                <th><?= _('Image') ?></th>
+                <th></th>
+            </tr>
+            </tbody>
+            <?php
+            foreach ($newtable as $item) {
+                ?>
+                <tr>
+                    <td>
+                        <input type="text" name="valnames[<?=$item->id?>]" value="<?=$item->name?>">
+                    </td>
+                    <td><?= $item->code ?></td>
+                    <td>
+                        <div class="form-group smartcat-uploader">
+                            <?php
+                            if(!empty($item->valute_icon)){
+                            ?>
+                                <div>
+                                    <br>
+                                    <img src="<?=$item->valute_icon?>" style="width: 50px;"/>
+                                </div>
+                            <?php
+                            }
+                            ?>
+                            <input type="text" name="valicons[<?=$item->id?>]" value="<?=$item->valute_icon?>">
+                        </div>
+                    </td>
+                    <td>
+                        <a href="<?= admin_url('options-general.php?page=exchanger_options&post=' . $item->id . '&action=delete') ?>">Удалить</a>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
+
         <div>
             <label for="valname"><?php echo _('Id valute'); ?> <strong>*</strong></label>
             <input type="text" id="valname" name="valname" value="<?php echo ( isset( $_POST['valname'] ) ? $_POST['valname'] : null ); ?>">
@@ -52,18 +81,48 @@ function exchanger_options_form($valname, $symbol) {
             <label for="symbol"><?php echo _('Symbol'); ?> <strong>*</strong></label>
             <input type="text" id="symbol" name="symbol" value="<?php echo ( isset( $_POST['symbol'] ) ? $_POST['symbol'] : null ); ?>">
         </div>
+        <div class="form-group smartcat-uploader">
+            <label for="valicon">Иконка валюты</label>
+            <input type="text" name="valicon">
+        </div>
         <input type="submit" name="submit" value="save"/>
     </form>
     <div><a target="_blank" href="<?php echo $linkapi; ?>">View valutes of the API</a></div>
+    <script>
+        $.wpMediaUploader({
+
+            target : '.smartcat-uploader', // The class wrapping the textbox
+            uploaderTitle : 'Выбрать или загрузить картинку', // The title of the media upload popup
+            uploaderButton : 'Выбрать', // the text of the button in the media upload popup
+            multiple : false, // Allow the user to select multiple images
+            buttonText : 'Загрузить иконку', // The text of the upload button
+            buttonClass : '.smartcat-upload', // the class of the upload button
+            previewSize : '50px', // The preview image size
+            modal : false, // is the upload button within a bootstrap modal ?
+            buttonStyle : { // style the button
+                color : '#fff',
+                background : '#3bafda',
+                fontSize : '10px',
+                padding : '5px 8px',
+            },
+
+        });
+    </script>
     <?php
 }
-function exchanger_options_validation($valname, $symbol)
+function exchanger_options_validation($valname, $symbol, $valicon, $valnames = array(), $valicons = array())
 {
     global $reg_errors;
     $reg_errors = new WP_Error;
 
-    if (empty($valname) || empty($symbol)) {
+
+    if ((empty($valname) && !empty($symbol)) || (!empty($valname) && empty($symbol))) {
         $reg_errors->add('field', _('Required form field is missing'));
+    }
+    foreach ($valnames as $valnam) {
+        if (empty($valnam)) {
+            $reg_errors->add('field', _('Required form field is missing'));
+        }
     }
     if ( is_wp_error( $reg_errors ) ) {
 
@@ -80,31 +139,47 @@ function exchanger_options_validation($valname, $symbol)
 }
 
 function exchanger_options_complete() {
-    global $reg_errors, $valname, $symbol, $wpdb;
+    global $reg_errors, $valname, $valicon, $valicons, $valnames, $symbol, $wpdb;
 
     if ( 1 > count($reg_errors->get_error_messages()) ) {
         $linkapi = 'https://api.coinmarketcap.com/v1/ticker/';
         $table_name = $wpdb->prefix . "exchanger_valutes";
         $ids = $wpdb->get_var("SELECT id FROM $table_name WHERE name = '$valname' AND code = '$symbol'");
-        if(empty($ids)){
+        if(empty($ids) && !empty($valname) && !empty($symbol)){
             $data=array(
-                'time' => time(),
-                'name' => $valname,
-                'code' => $symbol,
+                'time'          => time(),
+                'name'          => $valname,
+                'code'          => $symbol,
+                'valute_icon'   => $valicon,
             );
             $wpdb->insert($table_name, $data);
-            echo 'Valute save complete.';
+            echo 'Валюта успешно сохранена.<br />';
         }else{
-            echo 'Valute is alredy exist.';
+            echo "Валюта $valname уже сущевствует.<br />";
+        }
+        foreach ($valnames as $id => $valnam) {
+
+            $data = array(
+                'time'          => time(),
+                'name'          => $valnam,
+                'valute_icon'   => $valicons[$id],
+            );
+            if(!empty($valnam)){
+                $wpdb->update($table_name, $data, array('ID' => $id));
+            }
+            //echo "Валюта $valnam успешно обновлена.<br />";
         }
     }
 }
 
 function exchanger_options_function() {
     if ( isset($_POST['submit'] ) ) {
-        exchanger_options_validation($_POST['valname'], $_POST['symbol']);
-        global $valname, $symbol;
+        exchanger_options_validation($_POST['valname'], $_POST['symbol'], $_POST['valicon'], $_POST['valnames'], $_POST['valicons']);
+        global $valnames, $valname, $valicon, $valicons, $symbol;
+        $valnames = $_POST['valnames'];
         $valname = $_POST['valname'];
+        $valicon = $_POST['valicon'];
+        $valicons = $_POST['valicons'];
         $symbol  = $_POST['symbol'];
         exchanger_options_complete();
     }
@@ -289,9 +364,7 @@ function exchanger_reserv_form() {
         table td.cource{
             text-align: left;
         }
-        table td input{
-            width: 50px;
-        }
+
 
 
     </style>
@@ -401,6 +474,7 @@ function exchanger_orders_list()
 
     $table_name = $wpdb->prefix . "exchanger_orders";
     $order_statuses = array('pending', 'payed', 'complete', 'cancel');
+    $order_statuses_ = array('Ожидание оплаты', 'Оплачено', 'Завершено', 'Отменено');
 
     if (isset($_POST['submit'])) {
 
@@ -540,7 +614,7 @@ function exchanger_orders_list()
                                 ?>
                                 <select name="status">
                                     <?php
-                                    foreach ($order_statuses as $key => $order_status) {
+                                    foreach ($order_statuses_ as $key => $order_status) {
                                         ?>
                                         <option<?php if ($key == $item->status) echo ' selected="selected"'; ?>
                                                 value="<?= $key ?>"><?= $order_status ?></option>
@@ -550,7 +624,7 @@ function exchanger_orders_list()
                                 </select>
                                 <?php
                             }else{
-                                echo _($order_statuses[$item->status]);
+                                echo _($order_statuses_[$item->status]);
                             }
                         ?>
                     </td>
@@ -630,5 +704,3 @@ function exchanger_orders_list()
         <?php
     }
 }
-
-?>

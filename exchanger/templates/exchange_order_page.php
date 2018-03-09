@@ -16,6 +16,7 @@ $reservs = array();
 $table_name = $wpdb->prefix . "exchanger_orders";
 $ordertable = $wpdb->get_results( "SELECT * FROM $table_name WHERE order_num = '$code'" );
 $order_statuses = array('pending', 'payed', 'complete', 'cancel');
+$order_statuses_ = array('Ожидание оплаты', 'Оплачено', 'Завершено', 'Отменено');
 $status = 0;
 $valutes = array();
 $table_valutes_name = $wpdb->prefix . "exchanger_valutes";
@@ -49,7 +50,7 @@ $valutes = array_merge($valutes,$config_valutes);
         $order_data = unserialize($item->order_data);
         ?>
         <div class="h1">Заявка на обмен №<?=$id?></div>
-        <div class="h2">Статус заявки: <?=_($order_statuses[$item->status])?></div>
+        <div class="h2"><span class="order-status-icon<?=' '.$order_statuses[$item->status]?>"></span>Статус заявки: <?=_($order_statuses_[$item->status])?></div>
         <div class="mk-col-4-12">
             <div class="h3">Отдаете</div>
             <div class="h4"><?=ucfirst($valutes[$order_data['forvalute']])?></div>

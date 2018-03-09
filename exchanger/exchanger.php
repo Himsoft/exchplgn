@@ -52,11 +52,12 @@ function exchanger_menu() {
 function exchanger_form() {
 
     global $wpdb, $config_valutes;
-    $valutes = array();
+    $valutes = $icons = array();
     $table_name = $wpdb->prefix . "exchanger_valutes";
     $newtable = $wpdb->get_results("SELECT * FROM $table_name");
 
     foreach ($newtable as $item) {
+        $icons[$item->code] = $item->valute_icon;
         if(strpos($item->code, 'USD_') !== false || strpos($item->code, 'EUR_') !== false || strpos($item->code, 'UAH_') !== false){
             $valutes[$item->code] = $item->name;
         }else {
@@ -86,28 +87,28 @@ function exchanger_form() {
 						<?php
 						foreach ($valutes as $value => $code){
 							?>
-							<option <?php echo(isset($_POST['forvalute']) && $_POST['forvalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
+							<option data-icon="<?=$icons[$code]?>" <?php echo(isset($_POST['forvalute']) && $_POST['forvalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
 						<?php } ?>
 					</select>
 				</div>
 				<div>
 					<label for="sumfor"><?php echo _('Сумма'); ?>:</label>
-					<input type="text" id="sumfor" name="sumfor" min="0" value="<?php echo ( isset( $_POST['sumfor'] ) ? $_POST['sumfor'] : null ); ?>">
+					<input type="text" autocomplete="off" id="sumfor" name="sumfor" min="0" value="<?php echo ( isset( $_POST['sumfor'] ) ? $_POST['sumfor'] : null ); ?>">
 				</div>
 
 				<div class="card">
 					<label for="cardfor"><?php echo _('№ карты');?>:</label>
-					<input type="text" name="cardfor" value="<?php echo(isset($_POST['cardfor']) ? $_POST['cardfor'] : null); ?>">
+					<input type="text" autocomplete="off" name="cardfor" value="<?php echo(isset($_POST['cardfor']) ? $_POST['cardfor'] : null); ?>">
 				</div>
 
 				<div class="purse">
 					<label for="pursefor"><?php echo _('Счет');?>:</label>
-					<input type="text" name="pursefor" value="<?php echo(isset($_POST['pursefor']) ? $_POST['pursefor'] : null); ?>">
+					<input type="text" autocomplete="off" name="pursefor" value="<?php echo(isset($_POST['pursefor']) ? $_POST['pursefor'] : null); ?>">
 				</div>
 
 				<div class="city">
 					<label for="cityfor"><?php echo _('Город');?>:</label>
-					<input type="text" name="cityfor" value="<?php echo(isset($_POST['cityfor']) ? $_POST['cityfor'] : null); ?>">
+					<input type="text" autocomplete="off" name="cityfor" value="<?php echo(isset($_POST['cityfor']) ? $_POST['cityfor'] : null); ?>">
 				</div>
 				<div class="transfer-ico"><i class="fa fa-arrows-h" aria-hidden="true"></i></div>
 			</div>
@@ -124,29 +125,29 @@ function exchanger_form() {
 						<?php
 						foreach ($valutes as $value => $code){
 							?>
-							<option <?php echo(isset($_POST['tovalute']) && $_POST['tovalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
+							<option data-icon="<?=$icons[$code]?>" <?php echo(isset($_POST['tovalute']) && $_POST['tovalute'] == $value ? ' selected="selected"' : null); ?> value="<?php echo $value; ?>"><?php echo $code; ?></option>
 						<?php } ?>
 					</select>
 				</div>
 				<div class="form-item st2-summ">
 					<div class="reserv"></div>
 					<label for="sumto"><?php echo _('Сумма'); ?>:</label>
-					<input type="text" readonly="readonly" id="sumto" max="0" name="sumto" value="<?php echo ( isset( $_POST['sumto'] ) ? $_POST['sumto'] : null ); ?>">
+					<input type="text" autocomplete="off" readonly="readonly" id="sumto" max="0" name="sumto" value="<?php echo ( isset( $_POST['sumto'] ) ? $_POST['sumto'] : null ); ?>">
 				</div>
 
 				<div class="form-item card">
 					<label for="cardto"><?php echo _('№ карты');?>:</label>
-					<input type="text" name="cardto" value="<?php echo(isset($_POST['cardto']) ? $_POST['cardto'] : null); ?>">
+					<input type="text" autocomplete="off" name="cardto" value="<?php echo(isset($_POST['cardto']) ? $_POST['cardto'] : null); ?>">
 				</div>
 
 				<div class="form-item purse">
 					<label for="purseto"><?php echo _('Счет');?>:</label>
-					<input type="text" name="purseto" value="<?php echo(isset($_POST['purseto']) ? $_POST['purseto'] : null); ?>">
+					<input type="text" autocomplete="off" name="purseto" value="<?php echo(isset($_POST['purseto']) ? $_POST['purseto'] : null); ?>">
 				</div>
 
 				<div class="form-item city">
 					<label for="cityto"><?php echo _('Город');?>:</label>
-					<input type="text" name="cityto" value="<?php echo(isset($_POST['cityto']) ? $_POST['cityto'] : null); ?>">
+					<input type="text" autocomplete="off" name="cityto" value="<?php echo(isset($_POST['cityto']) ? $_POST['cityto'] : null); ?>">
 				</div>
 			</div>
         </div>
@@ -156,22 +157,22 @@ function exchanger_form() {
 			<div class="col-data">
 				<div class="form-item form-item">
 					<label for="firstname"><?php echo _('Имя');?>:</label>
-					<input type="text" name="firstname" value="<?php echo(isset($_POST['firstname']) ? $_POST['firstname'] : null); ?>">
+					<input type="text" autocomplete="off" name="firstname" value="<?php echo(isset($_POST['firstname']) ? $_POST['firstname'] : null); ?>">
 				</div>
 
 				<div class="form-item crypto-hide nal-hide">
 					<label for="lastname"><?php echo _('Фамилия');?>:</label>
-					<input type="text" name="lastname" value="<?php echo(isset($_POST['lastname']) ? $_POST['lastname'] : null); ?>">
+					<input type="text" autocomplete="off" name="lastname" value="<?php echo(isset($_POST['lastname']) ? $_POST['lastname'] : null); ?>">
 				</div>
 
 				<div class="form-item">
 					<label for="email">E-mail:</label>
-					<input type="text" name="email" value="<?php echo(isset($_POST['email']) ? $_POST['email'] : null); ?>">
+					<input type="text" autocomplete="off" name="email" value="<?php echo(isset($_POST['email']) ? $_POST['email'] : null); ?>">
 				</div>
 
 				<div class="form-item crypto-hide">
 					<label for="phone"><?php echo _('Телефон'); ?>:</label>
-					<input type="text" name="phone" value="<?php echo(isset($_POST['phone']) ? $_POST['phone'] : null); ?>">
+					<input type="text" autocomplete="off" name="phone" value="<?php echo(isset($_POST['phone']) ? $_POST['phone'] : null); ?>">
 				</div>
 			</div>
         </div>
@@ -450,5 +451,10 @@ function exchanger_add_js() {
     wp_localize_script( 'exhanger_ajax', 'exhanger_params', $params );
 }
 
-
+function load_admin_libs() {
+    $path = plugin_dir_url( __FILE__ );
+    wp_enqueue_media();
+    wp_enqueue_script( 'wp-media-uploader', $path. 'js/wp_media_uploader.js', array( 'jquery' ), 1.0 );
+}
+add_action( 'admin_enqueue_scripts', 'load_admin_libs' );
 ?>
