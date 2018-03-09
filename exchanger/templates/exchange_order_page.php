@@ -49,80 +49,108 @@ $valutes = array_merge($valutes,$config_valutes);
         $order_data = unserialize($item->order_data);
         ?>
         <div class="h1">Заявка на обмен №<?=$id?></div>
-        <div class="h2">Статус заявки: <?=_($order_statuses[$item->status])?></div>
-        <div class="mk-col-4-12">
-            <div class="h3">Отдаете</div>
-            <div class="h4"><?=ucfirst($valutes[$order_data['forvalute']])?></div>
-            <div class="row"><strong>Сумма:</strong><?=$order_data['sumfor']?></div>
-            <?php
-            if(in_array($order_data['forvalute'],$crypto)){
-            ?>
-            <div class="row"><strong>Кошелек:</strong><?=$order_data['pursefor']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['forvalute'],$nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cityfor']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['forvalute'],$v_nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cardfor']?></div>
-            <?php } ?>
-        </div>
-        <div class="mk-col-4-12">
-            <div class="h3">Получаете</div>
-            <div class="h4"><?=ucfirst($valutes[$order_data['tovalute']])?></div>
-            <div class="row"><strong>Сумма:</strong><?=$order_data['sumto']?></div>
-            <?php
-            if(in_array($order_data['tovalute'],$crypto)){
-            ?>
-            <div class="row"><strong>Кошелек:</strong><?=$order_data['purseto']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['tovalute'],$nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cityto']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['tovalute'],$v_nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cardto']?></div>
-            <?php } ?>
-        </div>
-        <div class="mk-col-4-12">
-            <div class="h3">Личные данные:</div>
-            <div class="row"><strong>Имя:</strong><?=$order_data['firstname']?></div>
+        <div class="h2">Статус заявки: <strong><?=_($order_statuses[$item->status])?></strong></div>
+		<div class="order-data">
+			<div class="mk-col-4-12 data-col">
+				<div class="col-head">Отдаете</div>
+				<div class="col-cont">
+					<div class="row val"><strong>Валюта:</strong> <?=ucfirst($valutes[$order_data['forvalute']])?></div>
+					<div class="row"><strong>Сумма:</strong> <?=$order_data['sumfor']?></div>
+					<?php
+					if(in_array($order_data['forvalute'],$crypto)){
+					?>
+					<div class="row"><strong>Кошелек:</strong> <?=$order_data['pursefor']?></div>
+					<?php } ?>
+					<?php
+					if(in_array($order_data['forvalute'],$nal)){
+					?>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cityfor']?></div>
+					<?php } ?>
+					<?php
+					if(in_array($order_data['forvalute'],$v_nal)){
+					?>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cardfor']?></div>
+					<?php } ?>
+				</div>
+			</div>
+			<div class="mk-col-4-12 data-col">
+				<div class="col-head">Получаете</div>
+				<div class="col-cont">
+					<div class="row val"><strong>Валюта:</strong> <?=ucfirst($valutes[$order_data['tovalute']])?></div>
+					<div class="row"><strong>Сумма:</strong> <?=$order_data['sumto']?></div>
+					<?php
+					if(in_array($order_data['tovalute'],$crypto)){
+					?>
+					<div class="row"><strong>Кошелек:</strong> <?=$order_data['purseto']?></div>
+					<?php } ?>
+					<?php
+					if(in_array($order_data['tovalute'],$nal)){
+					?>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cityto']?></div>
+					<?php } ?>
+					<?php
+					if(in_array($order_data['tovalute'],$v_nal)){
+					?>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cardto']?></div>
+					<?php } ?>
+					<div class="row course"><strong>Курс на момент создания заявки:</strong> <?=$order_data['course']?></div>
+				</div>
+			</div>
+			<div class="mk-col-4-12 data-col">
+				<div class="col-head">Личные данные:</div>
+				<div class="col-cont">
+					<div class="row"><strong>Имя:</strong> <?=$order_data['firstname']?></div>
 
-            <?php if(!empty($order_data['lastname'])){ ?>
-            <div class="row"><strong>Фамилия:</strong><?=$order_data['purseto']?></div>
-            <?php } ?>
-            <?php if(!empty($order_data['phone'])){ ?>
-            <div class="row"><strong>Номер телефона:</strong><?=$order_data['phone']?></div>
-            <?php } ?>
+					<?php if(!empty($order_data['lastname'])){ ?>
+					<div class="row"><strong>Фамилия:</strong> <?=$order_data['purseto']?></div>
+					<?php } ?>
+					<?php if(!empty($order_data['phone'])){ ?>
+					<div class="row"><strong>Номер телефона:</strong> <?=$order_data['phone']?></div>
+					<?php } ?>
 
-            <div class="row"><strong>Email:</strong><?=$order_data['email']?></div>
-
-        </div>
-        <div class="course"><strong>Курс на момент создания заявки:</strong><?=$order_data['course']?></div>
+					<div class="row"><strong>Email:</strong> <?=$order_data['email']?></div>
+				</div>
+			</div>
+		</div>
         <?php
     }
     ?>
 
 </div>
 <?php if(!$status) { ?>
-    <div>
-        <div class="h1">ПОРЯДОК ДЕЙСТВИЙ ДЛЯ СОВЕРШЕНИЯ ОБМЕНА:</div>
-        <div>
-            <p>Совершите платеж на сумму 0.05 BTC на счёт 12N7QXnVhuucSTcu4kEstvpJCxetY5wh6V</p>
-            <p>После оплаты кликните по кнопке «Я ОПЛАТИЛ», чтобы мы получили уведомление и проверили поступление средств.</p>
-            <p>После получения 1 подтверждения о переводе средств от Bitcoin перевод занимает от 2 до 30 минут.</p>
-            <p>ВАЖНО!!! В целях максимально быстрой совершённой сделки настоятельно просим Вас указывать рекомендуемую комиссию в системе биткоин! В противном случае сделка по обмену может затянуться на очень длительный срок до 7 дней или же будет вообще отменена, а Ваш IP может автоматически оказаться в блэк-листе нашего сервиса! Давайте ценить Ваше и наше время и не тратить из-за этого нервы)</p>
+    <div class="info-steps">
+        <div class="steps-header"><h2>ПОРЯДОК ДЕЙСТВИЙ ДЛЯ СОВЕРШЕНИЯ ОБМЕНА:</h2></div>
+        <div class="steps-cont">
+			<div class="mk-col-4-12 steps-col col1">
+				<div class="col-cont">
+					<div class="info-img"></div>
+					<p>Совершите платеж на сумму 0.05 BTC на счёт 12N7QXnVhuucSTcu4kEstvpJCxetY5wh6V</p>
+				</div>
+			</div>
+			<div class="mk-col-4-12 steps-col col2">
+				<div class="col-cont">
+					<div class="info-img"></div>
+					<p>После оплаты кликните по кнопке «Я ОПЛАТИЛ», чтобы мы получили уведомление и проверили поступление средств.</p>
+				</div>
+			</div>
+			<div class="mk-col-4-12 steps-col col2">
+				<div class="col-cont">
+					<div class="info-img"></div>
+					<p>После получения 1 подтверждения о переводе средств от Bitcoin перевод занимает от 2 до 30 минут.</p>
+				</div>
+			</div>
+			<div class="clearfix"></div>
         </div>
     </div>
+	
+	<div class="notice-block">
+		<div class="notice-wrap">
+			<p>ВАЖНО!!! В целях максимально быстрой совершённой сделки настоятельно просим Вас указывать рекомендуемую комиссию в системе биткоин! В противном случае сделка по обмену может затянуться на очень длительный срок до 7 дней или же будет вообще отменена, а Ваш IP может автоматически оказаться в блэк-листе нашего сервиса! Давайте ценить Ваше и наше время и не тратить из-за этого нервы)</p>
+		</div>
+	</div>
 
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
-        <input type="submit" name="submit" value="<?= _('I payed') ?>"/>
+        <input type="submit" name="submit" value="<?= _('Я оплатил') ?>"/>
     </form>
 
     <?php
