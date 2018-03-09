@@ -50,7 +50,6 @@ $valutes = array_merge($valutes,$config_valutes);
         $order_data = unserialize($item->order_data);
         ?>
         <div class="h1">Заявка на обмен №<?=$id?></div>
-<<<<<<< HEAD
         <div class="h2"><span class="order-status-icon<?=' '.$order_statuses[$item->status]?>"></span>Статус заявки: <?=_($order_statuses_[$item->status])?></div>
         <div class="mk-col-4-12">
             <div class="h3">Отдаете</div>
@@ -95,7 +94,6 @@ $valutes = array_merge($valutes,$config_valutes);
         <div class="mk-col-4-12">
             <div class="h3">Личные данные:</div>
             <div class="row"><strong>Имя:</strong><?=$order_data['firstname']?></div>
-=======
         <div class="h2">Статус заявки: <strong><?=_($order_statuses[$item->status])?></strong></div>
 		<div class="order-data">
 			<div class="mk-col-4-12 data-col">
@@ -147,8 +145,6 @@ $valutes = array_merge($valutes,$config_valutes);
 				<div class="col-head">Личные данные:</div>
 				<div class="col-cont">
 					<div class="row"><strong>Имя:</strong> <?=$order_data['firstname']?></div>
->>>>>>> origin/master
-
 					<?php if(!empty($order_data['lastname'])){ ?>
 					<div class="row"><strong>Фамилия:</strong> <?=$order_data['purseto']?></div>
 					<?php } ?>
