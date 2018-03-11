@@ -48,10 +48,9 @@ $valutes = array_merge($valutes,$config_valutes);
             $id = '0' . $id;
         }
         $order_data = unserialize($item->order_data);
-        $table_valutes_name = $wpdb->prefix . "exchanger_cources";
-        $message = $wpdb->get_var("SELECT message FROM $table_valutes_name WHERE exchange_code = '".$order_data['tovalute']."' AND code = '".$order_data['forvalute']."'");
         ?>
         <div class="h1">Заявка на обмен №<?=$id?></div>
+		<div class="status <?=_($order_statuses[$item->status])?>"></div>
         <div class="h2">Статус заявки: <strong><?=_($order_statuses_[$item->status])?></strong></div>
 		<div class="order-data">
 			<div class="mk-col-4-12 data-col">
@@ -72,7 +71,7 @@ $valutes = array_merge($valutes,$config_valutes);
 					<?php
 					if(in_array($order_data['forvalute'],$v_nal)){
 					?>
-					<div class="row"><strong>№ карты:</strong> <?=$order_data['cardfor']?></div>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cardfor']?></div>
 					<?php } ?>
 				</div>
 			</div>
@@ -94,7 +93,7 @@ $valutes = array_merge($valutes,$config_valutes);
 					<?php
 					if(in_array($order_data['tovalute'],$v_nal)){
 					?>
-					<div class="row"><strong>№ карты:</strong> <?=$order_data['cardto']?></div>
+					<div class="row"><strong>Город:</strong> <?=$order_data['cardto']?></div>
 					<?php } ?>
 					<div class="row course"><strong>Курс на момент создания заявки:</strong> <?=$order_data['course']?></div>
 				</div>
@@ -103,6 +102,7 @@ $valutes = array_merge($valutes,$config_valutes);
 				<div class="col-head">Личные данные:</div>
 				<div class="col-cont">
 					<div class="row"><strong>Имя:</strong> <?=$order_data['firstname']?></div>
+
 					<?php if(!empty($order_data['lastname'])){ ?>
 					<div class="row"><strong>Фамилия:</strong> <?=$order_data['purseto']?></div>
 					<?php } ?>
@@ -113,7 +113,6 @@ $valutes = array_merge($valutes,$config_valutes);
 					<div class="row"><strong>Email:</strong> <?=$order_data['email']?></div>
 				</div>
 			</div>
-            <div class="clearfix"></div>
 		</div>
         <?php
     }
@@ -148,21 +147,13 @@ $valutes = array_merge($valutes,$config_valutes);
 	
 	<div class="notice-block">
 		<div class="notice-wrap">
-			<p>ВАЖНО!!! В целях максимально быстрой совершённой сделки настоятельно просим Вас указывать рекомендуемую комиссию в системе биткоин! В противном случае сделка по обмену может затянуться на очень длительный срок до 7 дней или же будет вообще отменена, а Ваш IP может автоматически оказаться в блэк-листе нашего сервиса! Давайте ценить Ваше и наше время и не тратить из-за этого нервы)</p>
+			<p><strong>ВАЖНО!!!</strong> В целях максимально быстрой совершённой сделки настоятельно просим Вас указывать рекомендуемую комиссию в системе биткоин! В противном случае сделка по обмену может затянуться на очень длительный срок до 7 дней или же будет вообще отменена, а Ваш IP может автоматически оказаться в блэк-листе нашего сервиса! Давайте ценить Ваше и наше время и не тратить из-за этого нервы)</p>
 		</div>
 	</div>
 
-    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+    <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" class="confirm-payment-form">
         <input type="submit" name="submit" value="<?= _('Я оплатил') ?>"/>
     </form>
-
-    <?php
-    if(!empty($message)) {
-        ?>
-    <div class="notice-for-exhange"><?=$message?></div>
-        <?php
-    }
-    ?>
 
     <?php
 }
