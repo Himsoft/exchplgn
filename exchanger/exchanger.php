@@ -30,6 +30,7 @@ require_once($path . 'exchanger_install.php');
 register_activation_hook(__FILE__,'exchanger_install');
 require_once($path . 'exchanger_cron.php');
 require_once($path . 'exchanger_options.php');
+require_once($path . 'templates/exchange_reservs.php');
 
 function generate_order_num($id = false){
     global $wpdb;
@@ -54,7 +55,8 @@ function exchanger_form() {
     global $wpdb, $config_valutes;
     $valutes = $icons = array();
     $table_name = $wpdb->prefix . "exchanger_valutes";
-    $newtable = $wpdb->get_results("SELECT * FROM $table_name");
+    $table_reserv_name = $wpdb->prefix . "exchanger_valutes_reserv";
+    $newtable = $wpdb->get_results("SELECT * FROM $table_reserv_name");
 
     foreach ($newtable as $item) {
         $icons[$item->code] = $item->valute_icon;
@@ -64,7 +66,7 @@ function exchanger_form() {
             $valutes[$item->code] = $item->code;
         }
     }
-    $valutes = array_merge($valutes,$config_valutes);
+    $valutes = array_merge($valutes, $config_valutes);
     ?>
 <style>
     .cource {
@@ -302,7 +304,7 @@ function exchanger_complete() {
 
         $table_name = $wpdb->prefix . "exchanger_cources";
         $symbol = $wpdb->get_row("SELECT * FROM $table_name WHERE code = '".$orderdata['forvalute']."' AND exchange_code = '".$orderdata['tovalute']."'");
-        $course = round($symbol->cource*(1-($symbol->koefficient/100)));
+        $course = round($symbol->cource*(1-($symbol->koefficient/100)),2);
 
         $reserv_table_name = $wpdb->prefix . "exchanger_valutes_reserv";
         $reserv = $wpdb->get_row("SELECT * FROM $reserv_table_name WHERE code = '".$orderdata['tovalute']."'");
@@ -363,6 +365,7 @@ function exchanger_function() {
 
 // Register a new shortcode: [exchanger_forms]
 add_shortcode( 'exchanger_forms', 'exchanger_form_shortcode' );
+add_shortcode( 'exchanger_reservs', 'exchanger_reservs_shortcode' );
 
 // The callback function that will replace [book]
 function exchanger_form_shortcode() {

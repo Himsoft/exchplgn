@@ -46,24 +46,9 @@ function exchanger_options_form($valname, $symbol) {
                 ?>
                 <tr>
                     <td>
-                        <input type="text" name="valnames[<?=$item->id?>]" value="<?=$item->name?>">
+                        <input type="text" name="valnames[<?=$item->code?>]" value="<?=$item->name?>">
                     </td>
                     <td><?= $item->code ?></td>
-                    <td>
-                        <div class="form-group smartcat-uploader">
-                            <?php
-                            if(!empty($item->valute_icon)){
-                            ?>
-                                <div>
-                                    <br>
-                                    <img src="<?=$item->valute_icon?>" style="width: 50px;"/>
-                                </div>
-                            <?php
-                            }
-                            ?>
-                            <input type="text" name="valicons[<?=$item->id?>]" value="<?=$item->valute_icon?>">
-                        </div>
-                    </td>
                     <td>
                         <a href="<?= admin_url('options-general.php?page=exchanger_options&post=' . $item->id . '&action=delete') ?>">Удалить</a>
                     </td>
@@ -81,36 +66,12 @@ function exchanger_options_form($valname, $symbol) {
             <label for="symbol"><?php echo _('Symbol'); ?> <strong>*</strong></label>
             <input type="text" id="symbol" name="symbol" value="<?php echo ( isset( $_POST['symbol'] ) ? $_POST['symbol'] : null ); ?>">
         </div>
-        <div class="form-group smartcat-uploader">
-            <label for="valicon">Иконка валюты</label>
-            <input type="text" name="valicon">
-        </div>
         <input type="submit" name="submit" value="save"/>
     </form>
     <div><a target="_blank" href="<?php echo $linkapi; ?>">View valutes of the API</a></div>
-    <script>
-        $.wpMediaUploader({
-
-            target : '.smartcat-uploader', // The class wrapping the textbox
-            uploaderTitle : 'Выбрать или загрузить картинку', // The title of the media upload popup
-            uploaderButton : 'Выбрать', // the text of the button in the media upload popup
-            multiple : false, // Allow the user to select multiple images
-            buttonText : 'Загрузить иконку', // The text of the upload button
-            buttonClass : '.smartcat-upload', // the class of the upload button
-            previewSize : '50px', // The preview image size
-            modal : false, // is the upload button within a bootstrap modal ?
-            buttonStyle : { // style the button
-                color : '#fff',
-                background : '#3bafda',
-                fontSize : '10px',
-                padding : '5px 8px',
-            },
-
-        });
-    </script>
     <?php
 }
-function exchanger_options_validation($valname, $symbol, $valicon, $valnames = array(), $valicons = array())
+function exchanger_options_validation($valname, $symbol, $valnames = array())
 {
     global $reg_errors;
     $reg_errors = new WP_Error;
@@ -139,20 +100,21 @@ function exchanger_options_validation($valname, $symbol, $valicon, $valnames = a
 }
 
 function exchanger_options_complete() {
-    global $reg_errors, $valname, $valicon, $valicons, $valnames, $symbol, $wpdb;
+    global $reg_errors, $valname, $valnames, $symbol, $wpdb;
 
     if ( 1 > count($reg_errors->get_error_messages()) ) {
         $linkapi = 'https://api.coinmarketcap.com/v1/ticker/';
         $table_name = $wpdb->prefix . "exchanger_valutes";
+        $table_name_reserv = $wpdb->prefix . "exchanger_valutes_reserv";
         $ids = $wpdb->get_var("SELECT id FROM $table_name WHERE name = '$valname' AND code = '$symbol'");
         if(empty($ids) && !empty($valname) && !empty($symbol)){
             $data=array(
                 'time'          => time(),
                 'name'          => $valname,
                 'code'          => $symbol,
-                'valute_icon'   => $valicon,
             );
             $wpdb->insert($table_name, $data);
+            $wpdb->insert($table_name_reserv, $data);
             echo 'Валюта успешно сохранена.<br />';
         }else{
             echo "Валюта $valname уже сущевствует.<br />";
@@ -162,10 +124,10 @@ function exchanger_options_complete() {
             $data = array(
                 'time'          => time(),
                 'name'          => $valnam,
-                'valute_icon'   => $valicons[$id],
             );
             if(!empty($valnam)){
-                $wpdb->update($table_name, $data, array('ID' => $id));
+                $wpdb->update($table_name, $data, array('code' => $id));
+                $wpdb->update($table_name_reserv, $data, array('code' => $id));
             }
             //echo "Валюта $valnam успешно обновлена.<br />";
         }
@@ -174,12 +136,10 @@ function exchanger_options_complete() {
 
 function exchanger_options_function() {
     if ( isset($_POST['submit'] ) ) {
-        exchanger_options_validation($_POST['valname'], $_POST['symbol'], $_POST['valicon'], $_POST['valnames'], $_POST['valicons']);
-        global $valnames, $valname, $valicon, $valicons, $symbol;
+        exchanger_options_validation($_POST['valname'], $_POST['symbol'], $_POST['valnames']);
+        global $valnames, $valname, $symbol;
         $valnames = $_POST['valnames'];
         $valname = $_POST['valname'];
-        $valicon = $_POST['valicon'];
-        $valicons = $_POST['valicons'];
         $symbol  = $_POST['symbol'];
         exchanger_options_complete();
     }
@@ -234,6 +194,7 @@ function exchanger_koefficients_options_form() {
                 <th><?=_('course')?></th>
                 <th><?=_('Koefficient,%')?></th>
                 <th><?=_('Minimal sum')?></th>
+                <th><?=_('Message')?></th>
             </tr>
             </tbody>
             <?php
@@ -250,6 +211,9 @@ function exchanger_koefficients_options_form() {
                     </td>
                     <td>
                         <input type="text" id="valname_minsum_<?=$item->id?>" name="valname[<?=$item->id?>][minsum]" value="<?=$item->minsum?>">
+                    </td>
+                    <td>
+                        <textarea style="width: 300px;" id="valname_message_<?=$item->id?>" name="valname[<?=$item->id?>][message]"><?=$item->message?></textarea>
                     </td>
                 </tr>
                 <?php
@@ -300,6 +264,7 @@ function exchanger_koefficients_options_complete() {
                 'time' => time(),
                 'koefficient' => $value['koef'],
                 'minsum' => $value['minsum'],
+                'message' => $value['message'],
             );
             $wpdb->update($table_name, $data, array('ID' => $id));
         }
@@ -344,6 +309,7 @@ function exchanger_reserv_form() {
     foreach ($reservtable as $item){
         $reservs[$item->code]['reserv'] = $item->reserv;
         $reservs[$item->code]['name'] = $item->name;
+        $reservs[$item->code]['icon'] = $item->valute_icon;
     }
     ?>
     <style>
@@ -387,6 +353,21 @@ function exchanger_reserv_form() {
                     <td>
                         <input type="text" id="reserv_<?=$code?>" name="reserv[<?=$code?>][reserv]" value="<?=$reserv['reserv']?>">
                     </td>
+                    <td>
+                        <div class="form-group smartcat-uploader">
+                            <?php
+                            if(!empty($reserv['icon'])){
+                                ?>
+                                <div>
+                                    <br>
+                                    <img src="<?=$reserv['icon']?>" style="width: 50px;"/>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                            <input type="text" name="reserv[<?=$code?>][icon]" value="<?=$reserv['icon']?>">
+                        </div>
+                    </td>
                 </tr>
                 <?php
             }
@@ -394,6 +375,26 @@ function exchanger_reserv_form() {
         </table>
         <input type="submit" name="submit" value="save"/>
     </form>
+    <script>
+        $.wpMediaUploader({
+
+            target : '.smartcat-uploader', // The class wrapping the textbox
+            uploaderTitle : 'Выбрать или загрузить картинку', // The title of the media upload popup
+            uploaderButton : 'Выбрать', // the text of the button in the media upload popup
+            multiple : false, // Allow the user to select multiple images
+            buttonText : 'Загрузить иконку', // The text of the upload button
+            buttonClass : '.smartcat-upload', // the class of the upload button
+            previewSize : '50px', // The preview image size
+            modal : false, // is the upload button within a bootstrap modal ?
+            buttonStyle : { // style the button
+                color : '#fff',
+                background : '#3bafda',
+                fontSize : '10px',
+                padding : '5px 8px',
+            },
+
+        });
+    </script>
     <?php
 }
 function exchanger_reserv_validation($reserv)
@@ -431,6 +432,7 @@ function exchanger_reserv_complete() {
             $data = array(
                 'time'   => time(),
                 'reserv' => $value['reserv'],
+                'valute_icon'   => $value['icon'],
             );
             $ids = $wpdb->get_var("SELECT id FROM $table_name WHERE code = '$code'");
             if(empty($ids)){

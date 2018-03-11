@@ -48,53 +48,11 @@ $valutes = array_merge($valutes,$config_valutes);
             $id = '0' . $id;
         }
         $order_data = unserialize($item->order_data);
+        $table_valutes_name = $wpdb->prefix . "exchanger_cources";
+        $message = $wpdb->get_var("SELECT message FROM $table_valutes_name WHERE exchange_code = '".$order_data['tovalute']."' AND code = '".$order_data['forvalute']."'");
         ?>
         <div class="h1">Заявка на обмен №<?=$id?></div>
-        <div class="h2"><span class="order-status-icon<?=' '.$order_statuses[$item->status]?>"></span>Статус заявки: <?=_($order_statuses_[$item->status])?></div>
-        <div class="mk-col-4-12">
-            <div class="h3">Отдаете</div>
-            <div class="h4"><?=ucfirst($valutes[$order_data['forvalute']])?></div>
-            <div class="row"><strong>Сумма:</strong><?=$order_data['sumfor']?></div>
-            <?php
-            if(in_array($order_data['forvalute'],$crypto)){
-            ?>
-            <div class="row"><strong>Кошелек:</strong><?=$order_data['pursefor']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['forvalute'],$nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cityfor']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['forvalute'],$v_nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cardfor']?></div>
-            <?php } ?>
-        </div>
-        <div class="mk-col-4-12">
-            <div class="h3">Получаете</div>
-            <div class="h4"><?=ucfirst($valutes[$order_data['tovalute']])?></div>
-            <div class="row"><strong>Сумма:</strong><?=$order_data['sumto']?></div>
-            <?php
-            if(in_array($order_data['tovalute'],$crypto)){
-            ?>
-            <div class="row"><strong>Кошелек:</strong><?=$order_data['purseto']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['tovalute'],$nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cityto']?></div>
-            <?php } ?>
-            <?php
-            if(in_array($order_data['tovalute'],$v_nal)){
-            ?>
-            <div class="row"><strong>Город:</strong><?=$order_data['cardto']?></div>
-            <?php } ?>
-        </div>
-        <div class="mk-col-4-12">
-            <div class="h3">Личные данные:</div>
-            <div class="row"><strong>Имя:</strong><?=$order_data['firstname']?></div>
-        <div class="h2">Статус заявки: <strong><?=_($order_statuses[$item->status])?></strong></div>
+        <div class="h2">Статус заявки: <strong><?=_($order_statuses_[$item->status])?></strong></div>
 		<div class="order-data">
 			<div class="mk-col-4-12 data-col">
 				<div class="col-head">Отдаете</div>
@@ -114,7 +72,7 @@ $valutes = array_merge($valutes,$config_valutes);
 					<?php
 					if(in_array($order_data['forvalute'],$v_nal)){
 					?>
-					<div class="row"><strong>Город:</strong> <?=$order_data['cardfor']?></div>
+					<div class="row"><strong>№ карты:</strong> <?=$order_data['cardfor']?></div>
 					<?php } ?>
 				</div>
 			</div>
@@ -136,7 +94,7 @@ $valutes = array_merge($valutes,$config_valutes);
 					<?php
 					if(in_array($order_data['tovalute'],$v_nal)){
 					?>
-					<div class="row"><strong>Город:</strong> <?=$order_data['cardto']?></div>
+					<div class="row"><strong>№ карты:</strong> <?=$order_data['cardto']?></div>
 					<?php } ?>
 					<div class="row course"><strong>Курс на момент создания заявки:</strong> <?=$order_data['course']?></div>
 				</div>
@@ -155,6 +113,7 @@ $valutes = array_merge($valutes,$config_valutes);
 					<div class="row"><strong>Email:</strong> <?=$order_data['email']?></div>
 				</div>
 			</div>
+            <div class="clearfix"></div>
 		</div>
         <?php
     }
@@ -196,6 +155,14 @@ $valutes = array_merge($valutes,$config_valutes);
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
         <input type="submit" name="submit" value="<?= _('Я оплатил') ?>"/>
     </form>
+
+    <?php
+    if(!empty($message)) {
+        ?>
+    <div class="notice-for-exhange"><?=$message?></div>
+        <?php
+    }
+    ?>
 
     <?php
 }

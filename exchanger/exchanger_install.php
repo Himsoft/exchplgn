@@ -123,19 +123,20 @@ function exchanger_install () {
           cource VARCHAR(100) DEFAULT '0' NOT NULL,
           koefficient float DEFAULT '0' NOT NULL,
           minsum float DEFAULT '0' NOT NULL,
+          message text DEFAULT '' NOT NULL,
           UNIQUE KEY id (id)
         );";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 
-    $table_options_name = $wpdb->prefix . "exchanger_valutes";
-
-    $sql = "CREATE TABLE " . $table_options_name . " (
+    $table_reserv_name = $wpdb->prefix . "exchanger_valutes_reserv";
+    $sql = "CREATE TABLE " . $table_reserv_name . " (
           id mediumint(9) NOT NULL AUTO_INCREMENT,
           time bigint(11) DEFAULT '0' NOT NULL,
           name VARCHAR(100) NOT NULL,
           code VARCHAR(10) NOT NULL,
+          reserv float DEFAULT '0' NOT NULL,
           valute_icon text DEFAULT '' NOT NULL,
           UNIQUE KEY id (id)
         );";
