@@ -166,10 +166,5 @@ if(isset($_POST['submit']) && $status) {
     wp_mail($admin_email, 'Новая заявка', "<p>Проведена оплата заявки на обмен № $id. <a href='" . admin_url('options-general.php?page=exchanger_orders' . '&post=' . $id . '&action=edit') . "'>Просмотреть детально</a></p>");
 
     remove_filter('wp_mail_content_type', 'set_html_content_type');
-
-    function set_html_content_type()
-    {
-        return 'text/html';
-    }
 }
 ?>

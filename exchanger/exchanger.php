@@ -32,6 +32,11 @@ require_once($path . 'exchanger_cron.php');
 require_once($path . 'exchanger_options.php');
 require_once($path . 'templates/exchange_reservs.php');
 
+function set_html_content_type()
+{
+    return 'text/html';
+}
+
 function generate_order_num($id = false){
     global $wpdb;
     //if(!$id)

@@ -464,11 +464,6 @@ function exchanger_reserv_page(){
     echo $out;
 }
 
-function set_html_content_type()
-{
-    return 'text/html';
-}
-
 function exchanger_orders_list()
 {
 
