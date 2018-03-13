@@ -15,8 +15,8 @@ if (isset($_POST['submit'])) {
 $reservs = array();
 $table_name = $wpdb->prefix . "exchanger_orders";
 $ordertable = $wpdb->get_results( "SELECT * FROM $table_name WHERE order_num = '$code'" );
-$order_statuses = array('pending', 'payed', 'complete', 'cancel');
-$order_statuses_ = array('Ожидание оплаты', 'Оплачено', 'Завершено', 'Отменено');
+$order_statuses = array('pending', 'paychecked', 'payed', 'complete', 'cancel');
+$order_statuses_ = array('Ожидание оплаты', 'Оплата проверяется', 'Оплата получена', 'Деньги отправлены', 'Оплата отменена');
 $status = 0;
 $valutes = array();
 $table_valutes_name = $wpdb->prefix . "exchanger_valutes";

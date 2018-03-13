@@ -49,7 +49,7 @@ function do_every_one_min() {
     $valutes = array();
     $valutes_codes_ps = array();
     foreach ($newtable as $item) {
-        $valutes[] = $item->name;
+        $valutes[] = $item->code;
         if(strpos($item->code, 'USD_') !== false || strpos($item->code, 'EUR_') !== false || strpos($item->code, 'UAH_') !== false){
             $valutes_codes_ps[$item->name] = $item->code;
         }
@@ -60,7 +60,7 @@ function do_every_one_min() {
         $res = json_decode($res);
 
         foreach ($res as $item) {
-            if (!in_array($item->id, $valutes)) continue;
+            if (!in_array($item->symbol, $valutes)) continue;
             $key = 'price_' . strtolower($valutes_code);
             $data = array(
                 'time' => time(),

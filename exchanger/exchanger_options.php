@@ -470,8 +470,8 @@ function exchanger_orders_list()
     global $wpdb, $config_valutes;
 
     $table_name = $wpdb->prefix . "exchanger_orders";
-    $order_statuses = array('pending', 'payed', 'complete', 'cancel');
-    $order_statuses_ = array('Ожидание оплаты', 'Оплачено', 'Завершено', 'Отменено');
+    $order_statuses = array('pending', 'paychecked', 'payed', 'complete', 'cancel');
+    $order_statuses_ = array('Ожидание оплаты', 'Оплата проверяется', 'Оплата получена', 'Деньги отправлены', 'Оплата отменена');
 
     if (isset($_POST['submit'])) {
 
