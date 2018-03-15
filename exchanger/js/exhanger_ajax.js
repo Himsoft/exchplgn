@@ -62,7 +62,7 @@ jQuery(function($){
                     var resp = JSON.parse(response);
                     //console.log('AJAX response : ', response);
                     $('#sumto').val(resp.request_vars);
-                    $('#sumto').attr('data-cource',(resp.cource).toFixed(2));
+                    $('#sumto').attr('data-cource',((resp.cource < 1) ? (1 / resp.cource):resp.cource).toFixed(2));
                     $('#sumto').removeAttr('readonly');
                     var forvalute = $('#forvalute').val().split('_');
                     var tovalute = $('#tovalute').val().split('_');
@@ -188,7 +188,7 @@ jQuery(function($){
                         $('#sumto').val(resp.request_vars);
                     }
 
-                    $('#sumto').attr('data-cource',(resp.cource).toFixed(2));
+                    $('#sumto').attr('data-cource',((resp.cource < 1) ? (1 / resp.cource):resp.cource).toFixed(2));
                     $('#sumto').removeAttr('readonly');
 
                     var forvalute = $('#forvalute').val().split('_');
@@ -212,10 +212,10 @@ jQuery(function($){
             if(parseFloat($(this).val()) > parseFloat($(this).attr('max'))){
                 $(this).val($(this).attr('max').toFixed(2));
             }
-            var sumfor = parseFloat($(this).val() / $(this).data('cource'));
+            var sumfor = parseFloat($(this).val() * $(this).data('cource'));
             if(sumfor < $('#sumfor').attr('min')){
                 $('#sumfor').val(parseFloat($('#sumfor').attr('min')).toFixed(2));
-                var sumto = parseFloat($('#sumfor').attr('min'))*$(this).data('cource');
+                var sumto = parseFloat($('#sumfor').attr('min'))/$(this).data('cource');
                 $(this).val(sumto.toFixed(2));
             }else {
                 $('#sumfor').val(sumfor.toFixed(2));

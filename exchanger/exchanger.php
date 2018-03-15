@@ -56,7 +56,6 @@ function exchanger_menu() {
 }
 
 function exchanger_form() {
-
     global $wpdb, $config_valutes;
     $valutes = $icons = array();
     $table_name = $wpdb->prefix . "exchanger_valutes";
@@ -84,7 +83,7 @@ function exchanger_form() {
     }
 </style>
     <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post" class="exchange-form">
-        <div class="step-one formcol vc_col-sm-3">
+        <div class="step-one formcol vc_col-sm-3 md-row-1">
             <div class="h2"><span class="step-num">1</span><?=_('Отдаете')?></div>
 			<div class="col-data">
 				<div>
@@ -121,7 +120,7 @@ function exchanger_form() {
 			</div>
         </div>
 
-        <div class="step-two formcol vc_col-sm-3">
+        <div class="step-two formcol vc_col-sm-3 md-row-1">
             <div class="h2"><span class="step-num">2</span><?=_('Получаете')?></div>
 			<div class="col-data">
 				<div class="form-item st2-val">
@@ -159,7 +158,7 @@ function exchanger_form() {
 			</div>
         </div>
 
-        <div class="step-three user-info formcol vc_col-sm-3">
+        <div class="step-three user-info formcol vc_col-sm-3 md-row-2">
             <div class="h2"><span class="step-num">3</span><?=_('Личные данные')?>:</div>
 			<div class="col-data">
 				<div class="form-item form-item">
@@ -183,7 +182,7 @@ function exchanger_form() {
 				</div>
 			</div>
         </div>
-        <div class="step-four actions formcol vc_col-sm-3">
+        <div class="step-four actions formcol vc_col-sm-3 md-row-2">
             <button type="submit" name="submit">
 			    <div class="submit-before-wrap">
 					<span class="step-num">4</span>
